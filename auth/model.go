@@ -15,7 +15,7 @@ type User struct {
 }
 type claim struct {
 	Name               string `json:"username"`
-	jwt.StandardClaims        //embading another struct jwt standeer libary
+	jwt.StandardClaims        //Embading Another struct jwt standeer libary
 }
 type loginResponse struct {
 	Token string `json:"token"`
