@@ -12,9 +12,10 @@ import (
 	"main.go/data"
 )
 
-// type repo interface {
-// 	FindByName(name string) (User, error)
-// }
+type Repo interface {
+	findByName(name string) (User, error)
+	tokenValid(c *gin.Context) (bool, string)
+}
 type repoStruct struct {
 	DBSession *mgo.Session
 	DBName    string
@@ -23,15 +24,12 @@ type repoStruct struct {
 
 func (r *repoStruct) FindByName(name string) (User, error) {
 	var user User
-	// fmt.Println("r.DBName", r.DBName)
-	// fmt.Println("r.DBTable", r.DBTable)
 	coll := r.DBSession.DB(r.DBName).C(r.DBTable)
 	err := coll.Find(bson.M{"name": name}).One(&user)
 	if err != nil {
 		fmt.Println(err)
 		return User{}, err
 	}
-	// fmt.Println("user: ", user)
 	return user, nil
 }
 func (s *repoStruct) tokenValid(c *gin.Context) (bool, string) {
@@ -50,7 +48,6 @@ func (s *repoStruct) tokenValid(c *gin.Context) (bool, string) {
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 	}
-	fmt.Println("claim: ", claims.Name)
 
 	if !tkn.Valid {
 		return false, ""

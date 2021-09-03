@@ -65,8 +65,7 @@ func (h *handlerStruct) login(c *gin.Context) {
 
 }
 func (h *handlerStruct) validToken(c *gin.Context) {
-	fmt.Println("auth...")
-	returnValue, Username := h.authService.isLogin(c)
+	returnValue, Username := h.authService.IsLogin(c)
 	if !returnValue {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return

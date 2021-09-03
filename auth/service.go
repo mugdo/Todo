@@ -21,7 +21,7 @@ func (authService *Service) loginUser(Login Login) (User, error) {
 	return userf, nil
 
 }
-func (authService *Service) isLogin(c *gin.Context) (bool, string) {
+func (authService *Service) IsLogin(c *gin.Context) (bool, string) {
 	value, usename := authService.repoService.tokenValid(c)
 	if !value {
 		return false, ""

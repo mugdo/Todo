@@ -1,27 +1,25 @@
 package todo
 
-import (
-	"github.com/gin-gonic/gin"
-)
-
 type Service struct {
 	repoService *repoStruct
 }
 
-func NewAuthService(repo *repoStruct) *Service {
+func NewTodohService(repo *repoStruct) *Service {
 	return &Service{
 		repoService: repo,
 	}
-}
-func (todoService *Service) isLogin(c *gin.Context) (bool, string) {
-	value, usename := todoService.repoService.tokenValid(c)
-	if !value {
-		return false, ""
-	}
-	return value, usename
 }
 func (todoService *Service) insertTodo(S ITodo) error {
 	err := todoService.repoService.InsertByName(S)
 	return err
 
+}
+func (todoService *Service) users() []ITodo {
+	return  todoService.repoService.FindUserByName()
+}
+func (todoService *Service) user(name string) ITodo {
+	return  todoService.repoService.singleUser(name)
+}
+func (todoService *Service) dlete(req ITodo) error {
+	return  todoService.repoService.deleteTodoMessage(req)
 }

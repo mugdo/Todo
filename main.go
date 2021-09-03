@@ -31,6 +31,6 @@ func main() {
 	r.Run(":3002")
 }
 func initializeAllServices(router *gin.RouterGroup, dbSession *mgo.Session) {
-	auth.Init(router, dbSession)
-	todo.Init(router, dbSession)
+	Service := auth.Init(router, dbSession)
+	todo.Init(router, dbSession, *Service)
 }

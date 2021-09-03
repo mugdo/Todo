@@ -2,12 +2,9 @@ package todo
 
 import (
 	"fmt"
-	"net/http"
-	"strings"
 
-	"github.com/dgrijalva/jwt-go"
-	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
 	"main.go/data"
 )
 
@@ -17,33 +14,67 @@ type repoStruct struct {
 	DBTable   string
 }
 
-func (s *repoStruct) tokenValid(c *gin.Context) (bool, string) {
-	reqToken := c.GetHeader("Authorization")
-	splitToken := strings.Split(reqToken, " ")
-	if len(splitToken) != 2 {
-		c.Writer.WriteHeader(http.StatusUnauthorized)
-		return false, ""
-	}
-	claims := &claim{}
-	tkn, err := jwt.ParseWithClaims(splitToken[1], claims,
-		func(t *jwt.Token) (interface{}, error) {
-			return []byte("key"), nil
-
-		})
-	if err != nil {
-		c.Writer.WriteHeader(http.StatusBadRequest)
-	}
-	fmt.Println("claim: ", claims.Name)
-
-	if !tkn.Valid {
-		return false, ""
-	}
-
-	return true, claims.Name
-}
 func (r *repoStruct) InsertByName(req ITodo) error {
+	var user ITodo
 	coll := r.DBSession.DB(r.DBName).C(r.DBTable)
-	err := coll.Insert(&req)
+	err := coll.Find(bson.M{"name": req.Name}).One(&user)
+	fmt.Println("user: ", user.Name)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	req.Mssage = append(req.Mssage, user.Mssage...)
+	err = coll.Update(user, req)
+	return err
+}
+func (r *repoStruct) FindUserByName() []ITodo {
+	var user []ITodo
+	coll := r.DBSession.DB(r.DBName).C(r.DBTable)
+	err := coll.Find(bson.M{}).All(&user)
+	if err != nil {
+		fmt.Println(err)
+		return user
+	}
+	return user
+}
+func (r *repoStruct) singleUser(name string) ITodo {
+	var user ITodo
+	coll := r.DBSession.DB(r.DBName).C(r.DBTable)
+	err := coll.Find(bson.M{"name": name}).One(&user)
+	fmt.Println("user: ", user.Name)
+	if err != nil {
+		fmt.Println(err)
+		return ITodo{}
+	}
+	return user
+}
+func (r *repoStruct) deleteTodoMessage(req ITodo) error {
+	var user ITodo
+	coll := r.DBSession.DB(r.DBName).C(r.DBTable)
+	err := coll.Find(bson.M{"name": req.Name}).One(&user)
+	fmt.Println("user1: ", req.Name)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	fmt.Println("len: ", len(user.Mssage))
+	for ind, value := range user.Mssage {
+		if value == req.Mssage[0] {
+			fmt.Println("message : ", value)
+			user.Mssage = append(user.Mssage[:ind], user.Mssage[ind+1:]...)
+			fmt.Println(user.Mssage)
+			break
+		}
+	}
+	selector := bson.M{"name": req.Name}
+	// info, err := coll.Upsert(selector, bson.M{"$set":{"mssage":user.Mssage}})
+	change := bson.M{"$pull": bson.M{"mssage": req.Mssage[0]}}
+	fmt.Println(change)
+	err = coll.Update(selector, change)
+	// coll.UpdateAll(selector, user)
+
+	// err = coll.Update(user,user)
+	fmt.Println(err)
 	return err
 }
 func NewRepository(dbSession *mgo.Session) *repoStruct {
