@@ -18,6 +18,7 @@ func MakeHTTPHandlers(router *gin.RouterGroup, todoService *Service, service aut
 		todoService: todoService,
 		authService: service,
 	}
+	// Router handelar endpoint
 	router.GET("todo", h.getuser)
 	router.POST("todo", h.addTodo)
 	router.DELETE("todo", h.deleteTodo)
@@ -28,12 +29,14 @@ type TodoRequest struct {
 	Todo TodoDecode
 }
 
+// Add single todo instance
 func (h *handlerStruct) addTodo(c *gin.Context) {
 	returnValue, Username := h.authService.IsLogin(c)
 	if !returnValue {
 		c.Writer.WriteHeader(http.StatusUnauthorized)
 		return
 	}
+
 	decodeTodo := TodoDecode{}
 
 	err := c.ShouldBindJSON(&decodeTodo)
@@ -41,6 +44,7 @@ func (h *handlerStruct) addTodo(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	VTodo := ITodo{}
 	VTodo.Name = Username
 	VTodo.Mssage = append(VTodo.Mssage, decodeTodo.Mssage)
@@ -50,11 +54,15 @@ func (h *handlerStruct) addTodo(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	response := &TodoDecode{
 		Mssage: "Inserted",
 	}
+
 	c.JSON(http.StatusOK, &response)
 }
+
+//Get single User todo information
 func (h *handlerStruct) getuser(c *gin.Context) {
 	returnValue, Username := h.authService.IsLogin(c)
 	var users []ITodo
@@ -67,6 +75,8 @@ func (h *handlerStruct) getuser(c *gin.Context) {
 		c.JSON(http.StatusOK, user)
 	}
 }
+
+//Delete a single todo by user Id
 func (h *handlerStruct) deleteTodo(c *gin.Context) {
 	fmt.Println("deletetodo..")
 	returnValue, Username := h.authService.IsLogin(c)
@@ -74,6 +84,7 @@ func (h *handlerStruct) deleteTodo(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusUnauthorized)
 		return
 	}
+
 	decodeTodo := TodoDecode{}
 
 	err := c.ShouldBindJSON(&decodeTodo)
@@ -81,6 +92,7 @@ func (h *handlerStruct) deleteTodo(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	VTodo := ITodo{}
 	VTodo.Name = Username
 	VTodo.Mssage = append(VTodo.Mssage, decodeTodo.Mssage)
@@ -89,12 +101,15 @@ func (h *handlerStruct) deleteTodo(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	response := &TodoDecode{
 		Mssage: "Deleted",
 	}
-	c.JSON(http.StatusOK, &response)
 
+	c.JSON(http.StatusOK, &response)
 }
+
+// Update todo information
 func (h *handlerStruct) updateTodo(c *gin.Context) {
 	returnValue, Username := h.authService.IsLogin(c)
 	if !returnValue {
@@ -108,6 +123,7 @@ func (h *handlerStruct) updateTodo(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	VTodo := ITodo{}
 	VTodo.Name = Username
 	VTodo.Mssage = append(VTodo.Mssage, decodeTodo.Mssage)
@@ -121,6 +137,6 @@ func (h *handlerStruct) updateTodo(c *gin.Context) {
 	response := &TodoDecode{
 		Mssage: "Updated",
 	}
-	c.JSON(http.StatusOK, &response)
 
+	c.JSON(http.StatusOK, &response)
 }
