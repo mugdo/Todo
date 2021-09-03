@@ -23,3 +23,6 @@ func (todoService *Service) user(name string) ITodo {
 func (todoService *Service) dlete(req ITodo) error {
 	return  todoService.repoService.deleteTodoMessage(req)
 }
+func (todoService *Service) update(req ITodo) error {
+	return  todoService.repoService.updateTodoMessage(req)
+}

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"main.go/auth"
@@ -11,15 +10,7 @@ import (
 )
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
-
 	r := gin.Default()
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AllowCredentials = true
-	config.AddAllowHeaders("Authorization")
-	r.Use(cors.New(config))
-
 	v1 := r.Group("/api/v1")
 
 	session, err := mgo.Dial("localhost:27017")

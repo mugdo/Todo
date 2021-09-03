@@ -68,7 +68,7 @@ func (h *handlerStruct) getuser(c *gin.Context) {
 	}
 }
 func (h *handlerStruct) deleteTodo(c *gin.Context) {
-	fmt.Println("deletetodo...")
+	fmt.Println("deletetodo..")
 	returnValue, Username := h.authService.IsLogin(c)
 	if !returnValue {
 		c.Writer.WriteHeader(http.StatusUnauthorized)
@@ -90,19 +90,18 @@ func (h *handlerStruct) deleteTodo(c *gin.Context) {
 		return
 	}
 	response := &TodoDecode{
-		Mssage: "Deketed",
+		Mssage: "Deleted",
 	}
 	c.JSON(http.StatusOK, &response)
 
 }
 func (h *handlerStruct) updateTodo(c *gin.Context) {
-	fmt.Println("deletetodo...")
 	returnValue, Username := h.authService.IsLogin(c)
 	if !returnValue {
 		c.Writer.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	decodeTodo := TodoDecode{}
+	decodeTodo := Update{}
 
 	err := c.ShouldBindJSON(&decodeTodo)
 	if err != nil {
@@ -112,13 +111,15 @@ func (h *handlerStruct) updateTodo(c *gin.Context) {
 	VTodo := ITodo{}
 	VTodo.Name = Username
 	VTodo.Mssage = append(VTodo.Mssage, decodeTodo.Mssage)
-	err = h.todoService.dlete(VTodo)
+	VTodo.Mssage = append(VTodo.Mssage, decodeTodo.UpdateMessage)
+	fmt.Println("update decode := ", VTodo.Mssage)
+	err = h.todoService.update(VTodo)
 	if err != nil {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	response := &TodoDecode{
-		Mssage: "Deketed",
+		Mssage: "Updated",
 	}
 	c.JSON(http.StatusOK, &response)
 

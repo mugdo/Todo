@@ -6,7 +6,6 @@ require github.com/gin-gonic/gin v1.7.4
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/go-playground/locales v0.13.0 // indirect
@@ -24,4 +23,8 @@ require (
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )
 
-require github.com/stretchr/testify v1.6.1 // indirect
+require (
+	github.com/kr/pretty v0.1.0 // indirect
+	github.com/stretchr/testify v1.6.1 // indirect
+	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
+)
