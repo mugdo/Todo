@@ -22,6 +22,7 @@ type repoStruct struct {
 	DBTable   string
 }
 
+// find name for Authentication
 func (r *repoStruct) FindByName(name string) (User, error) {
 	var user User
 	coll := r.DBSession.DB(r.DBName).C(r.DBTable)
@@ -30,8 +31,11 @@ func (r *repoStruct) FindByName(name string) (User, error) {
 		fmt.Println(err)
 		return User{}, err
 	}
+
 	return user, nil
 }
+
+//Auth service user token validation
 func (s *repoStruct) tokenValid(c *gin.Context) (bool, string) {
 	reqToken := c.GetHeader("Authorization")
 	splitToken := strings.Split(reqToken, " ")
@@ -39,6 +43,7 @@ func (s *repoStruct) tokenValid(c *gin.Context) (bool, string) {
 		c.Writer.WriteHeader(http.StatusUnauthorized)
 		return false, ""
 	}
+
 	claims := &claim{}
 	tkn, err := jwt.ParseWithClaims(splitToken[1], claims,
 		func(t *jwt.Token) (interface{}, error) {
@@ -55,6 +60,8 @@ func (s *repoStruct) tokenValid(c *gin.Context) (bool, string) {
 
 	return true, claims.Name
 }
+
+//Constructore
 func NewRepository(dbSession *mgo.Session) *repoStruct {
 	return &repoStruct{
 		DBSession: dbSession,
