@@ -40,10 +40,12 @@ func (h *handlerStruct) login(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	if user.Name != req.Login.Name || user.Password != req.Login.Passward {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	expararTime := time.Now().Add(time.Minute * 10)
 	clam := &claim{
 		Name: req.Login.Name,
@@ -58,9 +60,11 @@ func (h *handlerStruct) login(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	response := &loginResponse{
 		Token: tokenString,
 	}
+
 	c.JSON(http.StatusOK, &response)
 
 }
@@ -70,6 +74,7 @@ func (h *handlerStruct) validToken(c *gin.Context) {
 		c.Writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
 	response := &tokenValid{
 		Name:   Username,
 		Mssage: "Token valid",
