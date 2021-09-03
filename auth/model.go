@@ -20,3 +20,11 @@ type claim struct {
 type loginResponse struct {
 	Token string `json:"token"`
 }
+type ITodo struct {
+	Name   string   `json:"name"`
+	Mssage []string `json:"mssage"`
+}
+type tokenValid struct {
+	Name   string `json:"name"`
+	Mssage string `json:"mssage"`
+}

@@ -9,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// type HandlerInterface interface {
-// 	login(c *gin.Context)
-// }
+type HandlerInterface interface {
+	login(c *gin.Context)
+}
 type handlerStruct struct {
 	authService *Service
 }
@@ -25,6 +25,7 @@ func MakeHTTPHandlers(router *gin.RouterGroup, authService *Service) {
 	}
 
 	router.POST("auth/login", h.login)
+	router.POST("auth", h.validToken)
 }
 func (h *handlerStruct) login(c *gin.Context) {
 	var req loginRequest
@@ -59,6 +60,20 @@ func (h *handlerStruct) login(c *gin.Context) {
 	}
 	response := &loginResponse{
 		Token: tokenString,
+	}
+	c.JSON(http.StatusOK, &response)
+
+}
+func (h *handlerStruct) validToken(c *gin.Context) {
+	fmt.Println("auth...")
+	returnValue, Username := h.authService.isLogin(c)
+	if !returnValue {
+		c.Writer.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	response := &tokenValid{
+		Name:   Username,
+		Mssage: "Token valid",
 	}
 	c.JSON(http.StatusOK, &response)
 

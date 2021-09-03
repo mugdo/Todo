@@ -1,5 +1,9 @@
 package auth
 
+import (
+	"github.com/gin-gonic/gin"
+)
+
 type Service struct {
 	repoService *repoStruct
 }
@@ -16,4 +20,11 @@ func (authService *Service) loginUser(Login Login) (User, error) {
 	}
 	return userf, nil
 
+}
+func (authService *Service) isLogin(c *gin.Context) (bool, string) {
+	value, usename := authService.repoService.tokenValid(c)
+	if !value {
+		return false, ""
+	}
+	return value, usename
 }

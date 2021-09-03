@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"main.go/auth"
+	"main.go/todo"
 )
 
 func main() {
@@ -31,4 +32,5 @@ func main() {
 }
 func initializeAllServices(router *gin.RouterGroup, dbSession *mgo.Session) {
 	auth.Init(router, dbSession)
+	todo.Init(router, dbSession)
 }
