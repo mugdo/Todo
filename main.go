@@ -22,6 +22,6 @@ func main() {
 	r.Run(":3002")
 }
 func initializeAllServices(router *gin.RouterGroup, dbSession *mgo.Session) {
-	Service := auth.Init(router, dbSession)
+	Service := auth.Init(router, dbSession) // auth service dosent work porparly
 	todo.Init(router, dbSession, *Service)
 }
