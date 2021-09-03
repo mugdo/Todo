@@ -9,10 +9,8 @@ func NewTodohService(repo *repoStruct) *Service {
 		repoService: repo,
 	}
 }
-func (todoService *Service) insertTodo(S ITodo) error {
-	err := todoService.repoService.InsertByName(S)
-	return err
-
+func (todoService *Service) insertTodo(res ITodo) error {
+	return todoService.repoService.InsertByName(res)
 }
 func (todoService *Service) users() []ITodo {
 	return  todoService.repoService.FindUserByName()
