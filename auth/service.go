@@ -13,6 +13,7 @@ func NewAuthService(repo *repoStruct) *Service {
 		repoService: repo,
 	}
 }
+//layer for auth service 
 func (authService *Service) loginUser(Login Login) (User, error) {
 	userf, err := authService.repoService.FindByName(Login.Name)
 	if err != nil {
