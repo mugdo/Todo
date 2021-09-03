@@ -11,5 +11,4 @@ func Init(r *gin.RouterGroup, dbSession *mgo.Session) *Service {
 	MakeHTTPHandlers(r, authService)
 
 	return authService
-
 }
