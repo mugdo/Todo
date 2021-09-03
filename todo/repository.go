@@ -51,9 +51,9 @@ func (r *repoStruct) singleUser(name string) ITodo {
 func (r *repoStruct) deleteTodoMessage(req ITodo) error {
 	coll := r.DBSession.DB(r.DBName).C(r.DBTable)
 	selector := bson.M{"name": req.Name}
-	change := bson.M{"$pull": bson.M{"mssage": req.Mssage[0]}}
+	change := bson.M{"$pull": bson.M{"mssage": req.Mssage[0]}} //pull data from database
 	fmt.Println(change)
-	err := coll.Update(selector, change)
+	err := coll.Update(selector, change) //update data without change
 	// coll.UpdateAll(selector, user)
 	// err = coll.Update(user,user)
 	fmt.Println(err)
