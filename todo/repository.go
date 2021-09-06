@@ -8,6 +8,14 @@ import (
 	"main.go/data"
 )
 
+type RepoInterface interface {
+	InsertByName(req ITodo) error
+	FindUserByName() []ITodo
+	singleUser(name string) ITodo
+	deleteTodoMessage(req ITodo) error
+	updateTodoMessage(req ITodo) error
+}
+
 type repoStruct struct {
 	DBSession *mgo.Session
 	DBName    string
