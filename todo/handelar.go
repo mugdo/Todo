@@ -8,6 +8,13 @@ import (
 	"main.go/auth"
 )
 
+type Handelar interface{
+	addTodo(c *gin.Context)
+	getuser(c *gin.Context)
+	deleteTodo(c *gin.Context)
+	updateTodo(c *gin.Context) 
+}
+
 type handlerStruct struct {
 	todoService *Service
 	authService auth.Service
